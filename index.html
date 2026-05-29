@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Um Caminho de Saída — Organização de renda e patrimônio para médicos</title>
+<style>
+/* ============================================================
+   Um Caminho de Saída — sistema visual
+   Tom: sério, institucional, autoridade médica/financeira
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  /* — Cor — */
+  --bg:        oklch(0.975 0.006 85);   /* off-white quente */
+  --bg-soft:   oklch(0.955 0.008 85);   /* cartões / faixas */
+  --paper:     oklch(0.99 0.004 85);
+  --ink:       oklch(0.255 0.035 255);  /* azul-tinta profundo */
+  --ink-deep:  oklch(0.205 0.035 255);  /* fundos escuros */
+  --ink-2:     oklch(0.42 0.03 255);    /* texto secundário */
+  --line:      oklch(0.255 0.035 255 / 0.14);
+  --line-soft: oklch(0.255 0.035 255 / 0.08);
+  --gold:      oklch(0.66 0.09 72);     /* acento dourado/bronze */
+  --gold-deep: oklch(0.56 0.09 70);
+  --on-dark:   oklch(0.95 0.006 85);
+  --on-dark-2: oklch(0.78 0.012 85);
+  --on-dark-line: oklch(0.95 0.006 85 / 0.14);
+
+  /* — Tipografia — */
+  --serif: 'Spectral', Georgia, 'Times New Roman', serif;
+  --sans:  'Public Sans', system-ui, -apple-system, sans-serif;
+
+  /* — Métrica — */
+  --maxw: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Tipografia ---------- */
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; letter-spacing: -0.01em; }
+.display {
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.h2 { font-size: clamp(2rem, 3.6vw, 3.1rem); font-weight: 300; }
+.h3 { font-size: clamp(1.35rem, 2vw, 1.7rem); font-weight: 500; }
+em, .it { font-style: italic; }
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.eyebrow.on-dark { color: var(--gold); }
+
+.lead { font-size: clamp(1.05rem, 1.5vw, 1.28rem); color: var(--ink-2); line-height: 1.55; max-width: 40ch; }
+.muted { color: var(--ink-2); }
+.serif-num { font-family: var(--serif); font-weight: 300; }
+
+/* ---------- Layout ---------- */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
+section { padding-block: clamp(64px, 9vw, 132px); }
+
+.rule { height: 1px; background: var(--line); border: 0; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6em;
+  font-family: var(--sans); font-size: 0.92rem; font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.92em 1.5em;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer; text-decoration: none;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.btn-primary { background: var(--ink); color: var(--on-dark); }
+.btn-primary:hover { background: var(--ink-deep); transform: translateY(-1px); }
+.btn-gold { background: var(--gold); color: oklch(0.22 0.03 70); }
+.btn-gold:hover { background: var(--gold-deep); color: var(--on-dark); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn-ghost.on-dark { color: var(--on-dark); border-color: var(--on-dark-line); }
+.btn-ghost.on-dark:hover { border-color: var(--on-dark); }
+
+.arrow { transition: transform .2s ease; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* ---------- Placeholder de imagem ---------- */
+.ph {
+  position: relative;
+  background-color: var(--bg-soft);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 11px,
+    oklch(0.255 0.035 255 / 0.05) 11px 12px
+  );
+  border: 1px solid var(--line-soft);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.ph::after {
+  content: attr(data-label);
+  font-family: 'Public Sans', monospace;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-2); opacity: 0.7;
+  padding: 0.4em 0.7em;
+  border: 1px dashed var(--line);
+  background: var(--paper);
+}
+.ph.on-dark {
+  background-color: oklch(0.255 0.035 255 / 0.4);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 11px, oklch(0.95 0.006 85 / 0.05) 11px 12px);
+  border-color: var(--on-dark-line);
+}
+.ph.on-dark::after { color: var(--on-dark-2); background: transparent; border-color: var(--on-dark-line); }
+
+/* ---------- Nav ---------- */
+.site-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: oklch(0.975 0.006 85 / 0.82);
+  backdrop-filter: saturate(1.2) blur(12px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.nav-inner { display: flex; align-items: center; gap: 2rem; height: 76px; }
+.brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; color: var(--ink); }
+.brand-mark {
+  width: 26px; height: 26px; flex: none;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  position: relative;
+}
+.brand-mark::after {
+  content: ""; position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  clip-path: polygon(50% 50%, 100% 0, 100% 100%, 50% 100%);
+}
+.brand-name { font-family: var(--serif); font-size: 1.02rem; line-height: 1.0; font-weight: 500; letter-spacing: 0.01em; }
+.brand-sub { font-style: italic; font-weight: 400; }
+.nav-links { display: flex; gap: 1.8rem; margin-left: auto; }
+.nav-links a {
+  font-size: 0.92rem; font-weight: 500; color: var(--ink-2); text-decoration: none;
+  padding-bottom: 2px; border-bottom: 1px solid transparent; transition: color .15s, border-color .15s;
+}
+.nav-links a:hover { color: var(--ink); border-color: var(--gold); }
+.nav-cta { padding: 0.62em 1.15em; font-size: 0.86rem; }
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+}
+
+/* ---------- Hero ---------- */
+.hero { padding-top: clamp(48px, 7vw, 90px); padding-bottom: clamp(56px, 8vw, 110px); }
+.hero-grid {
+  display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.hero-copy > * + * { margin-top: 1.4rem; }
+.hero-copy .display { margin-top: 1.1rem; max-width: 16ch; }
+.hero-copy .lead { max-width: 46ch; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+.hero-note { font-size: 0.85rem; color: var(--ink-2); letter-spacing: 0.02em; }
+.hero-media { position: relative; }
+.hero-ph { width: 100%; aspect-ratio: 4 / 5; border-radius: var(--radius); }
+.hero-stat {
+  position: absolute; left: -10px; bottom: -22px;
+  background: var(--ink); color: var(--on-dark);
+  display: flex; align-items: center; gap: 0.9rem;
+  padding: 1rem 1.3rem; border-radius: var(--radius);
+  box-shadow: 0 18px 40px -22px oklch(0.205 0.035 255 / 0.7);
+}
+.hero-stat-num { font-size: 2.6rem; color: var(--gold); line-height: 1; }
+.hero-stat-label { font-size: 0.86rem; line-height: 1.25; color: var(--on-dark-2); }
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-media { order: -1; max-width: 420px; }
+  .hero-stat { left: auto; right: -8px; }
+}
+
+/* ---------- Sonhos ---------- */
+.sonhos-head { max-width: 760px; }
+.sonhos-head > * + * { margin-top: 1.1rem; }
+.sonhos-head .h2 { max-width: 18ch; }
+.sonhos-lead { max-width: 60ch; }
+
+.ladder { list-style: none; margin-top: clamp(40px, 5vw, 64px); display: grid; gap: 0; }
+.rung {
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(1.2rem, 3vw, 2.4rem);
+  align-items: baseline;
+  padding: 1.8rem 0;
+  border-top: 1px solid var(--line);
+  position: relative;
+  padding-left: clamp(0px, 3vw, 56px);
+  transition: padding-left .3s ease;
+}
+.ladder .rung:last-child { border-bottom: 1px solid var(--line); }
+.rung:hover { padding-left: clamp(8px, 4vw, 80px); }
+.rung-num { font-size: clamp(1.6rem, 2.4vw, 2.2rem); color: var(--gold-deep); width: 2.4ch; }
+.rung-body { max-width: 64ch; }
+.rung-body .h3 { margin-bottom: 0.35rem; }
+.rung-peak { background: linear-gradient(90deg, oklch(0.66 0.09 72 / 0.07), transparent 60%); }
+
+/* ---------- Método (faixa escura) ---------- */
+.metodo { background: var(--ink-deep); color: var(--on-dark); }
+.metodo-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+}
+.metodo-copy > * + * { margin-top: 1.3rem; }
+.metodo-copy .h2 { color: var(--on-dark); max-width: 14ch; }
+.metodo-copy .h2 em { color: var(--gold); }
+.metodo-lead { color: var(--on-dark-2); max-width: 50ch; }
+.metodo-pillars { display: grid; gap: 1px; background: var(--on-dark-line); border: 1px solid var(--on-dark-line); border-radius: var(--radius); overflow: hidden; }
+.pillar { background: var(--ink-deep); padding: 1.7rem 1.8rem; }
+.pillar-k { display: block; font-size: 1.5rem; color: var(--gold); margin-bottom: 0.6rem; }
+.pillar-t { font-family: var(--sans); font-size: 1.05rem; font-weight: 600; color: var(--on-dark); margin-bottom: 0.3rem; }
+.pillar-d { font-size: 0.96rem; color: var(--on-dark-2); line-height: 1.5; }
+@media (max-width: 860px) { .metodo-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Ecossistema / Loop ---------- */
+.eco-head { max-width: 820px; }
+.eco-head > * + * { margin-top: 1.1rem; }
+.eco-head .h2 { max-width: 20ch; }
+.eco-lead { max-width: 64ch; }
+
+.loop {
+  list-style: none; margin-top: clamp(40px, 5vw, 64px);
+  display: flex; align-items: stretch; gap: 0;
+}
+.loop-node {
+  flex: 1; background: var(--paper);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.5rem 1.5rem 1.7rem;
+  display: flex; flex-direction: column;
+}
+.loop-num { font-size: 1.7rem; color: var(--gold-deep); margin-bottom: 0.7rem; }
+.loop-t { font-family: var(--sans); font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
+.loop-d { font-size: 0.94rem; color: var(--ink-2); line-height: 1.5; }
+.loop-arrow {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  width: clamp(28px, 3vw, 52px); color: var(--gold-deep); font-size: 1.3rem;
+}
+.loop-return {
+  margin-top: 1.3rem; font-size: 0.96rem; color: var(--ink-2);
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.loop-return-arrow { color: var(--gold-deep); font-size: 1.25rem; }
+@media (max-width: 860px) {
+  .loop { flex-direction: column; }
+  .loop-arrow { width: auto; height: 32px; transform: rotate(90deg); }
+}
+
+.eco-tools {
+  margin-top: clamp(56px, 7vw, 96px);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.eco-tools-copy > * + * { margin-top: 1rem; }
+.eco-list { list-style: none; margin-top: 1.2rem; display: grid; gap: 0.7rem; }
+.eco-list li {
+  position: relative; padding-left: 1.6rem; font-size: 0.98rem; color: var(--ink);
+}
+.eco-list li::before {
+  content: ""; position: absolute; left: 0; top: 0.6em;
+  width: 8px; height: 8px; background: var(--gold); border-radius: 50%;
+}
+.eco-ph { width: 100%; aspect-ratio: 4 / 3; border-radius: var(--radius); }
+@media (max-width: 860px) { .eco-tools { grid-template-columns: 1fr; } }
+
+/* ---------- Como funciona ---------- */
+.como-head { max-width: 720px; }
+.como-head > * + * { margin-top: 1rem; }
+.como-head .h2 { max-width: 18ch; }
+.steps {
+  margin-top: clamp(40px, 5vw, 64px);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(28px, 4vw, 56px);
+}
+.step { border-top: 2px solid var(--ink); padding-top: 1.4rem; }
+.step-n { display: block; font-size: 2.4rem; color: var(--gold-deep); line-height: 1; margin-bottom: 0.8rem; }
+.step .h3 { margin-bottom: 0.5rem; }
+.step .muted { font-size: 0.98rem; }
+@media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+
+/* ---------- CTA Diagnóstico ---------- */
+.cta { background: var(--ink); color: var(--on-dark); }
+.cta-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 88px);
+  align-items: center;
+}
+.cta-copy > * + * { margin-top: 1.1rem; }
+.cta-copy .h2 { color: var(--on-dark); max-width: 12ch; }
+.cta-lead { color: var(--on-dark-2); max-width: 46ch; }
+.cta-form {
+  background: var(--paper); color: var(--ink);
+  padding: clamp(1.5rem, 3vw, 2.2rem); border-radius: var(--radius);
+  display: grid; gap: 1rem;
+  box-shadow: 0 30px 60px -34px oklch(0.18 0.03 255 / 0.8);
+}
+.field { display: grid; gap: 0.35rem; }
+.field span { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-2); }
+.field input {
+  font-family: var(--sans); font-size: 1rem; color: var(--ink);
+  padding: 0.78em 0.9em; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg); transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px oklch(0.66 0.09 72 / 0.18); }
+.cta-submit { width: 100%; justify-content: center; margin-top: 0.2rem; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+.cta-fineprint { font-size: 0.8rem; color: var(--ink-2); text-align: center; }
+@media (max-width: 860px) { .cta-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--ink-deep); color: var(--on-dark); padding-block: clamp(48px, 6vw, 72px) 28px; }
+.footer-inner { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.footer-brand { display: flex; align-items: center; gap: 0.7rem; }
+.brand-name.on-dark { color: var(--on-dark); }
+.footer-brand .brand-mark { border-color: var(--on-dark); }
+.footer-tag { color: var(--on-dark-2); font-size: 0.95rem; margin-right: auto; max-width: 32ch; }
+.footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-links a { color: var(--on-dark-2); text-decoration: none; font-size: 0.92rem; transition: color .15s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-base {
+  margin-top: clamp(32px, 4vw, 48px); padding-top: 22px; border-top: 1px solid var(--on-dark-line);
+  display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  font-size: 0.8rem; color: var(--on-dark-2);
+}
+
+/* ---------- WhatsApp icon in buttons ---------- */
+.wa-ico { font-size: 1.05em; line-height: 1; }
+
+/* ---------- Pitch button (ecossistema) ---------- */
+.eco-pitch-btn { margin-top: 1.4rem; }
+.eco-pitch-btn .arrow { font-size: 0.95em; }
+
+/* ---------- Materiais / E-books ---------- */
+.materiais { background: var(--bg-soft); }
+.materiais-head { max-width: 720px; }
+.materiais-head > * + * { margin-top: 1rem; }
+.materiais-head .h2 { max-width: 18ch; }
+.materiais-lead { max-width: 56ch; }
+.ebooks {
+  margin-top: clamp(40px, 5vw, 64px);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 3vw, 40px);
+}
+.ebook {
+  display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 0;
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.ebook:hover { transform: translateY(-3px); box-shadow: 0 24px 48px -30px oklch(0.205 0.035 255 / 0.6); }
+.ebook-cover { aspect-ratio: 3 / 4; height: 100%; border: 0; border-right: 1px solid var(--line-soft); }
+.ebook-body { padding: clamp(1.3rem, 2.2vw, 1.9rem); display: flex; flex-direction: column; }
+.ebook-kicker {
+  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-deep); margin-bottom: 0.6rem;
+}
+.ebook-body .h3 { font-size: clamp(1.15rem, 1.6vw, 1.45rem); margin-bottom: 0.5rem; }
+.ebook-desc { font-size: 0.96rem; }
+.ebook-actions { margin-top: auto; padding-top: 1.2rem; }
+@media (max-width: 860px) { .ebooks { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .ebook { grid-template-columns: 1fr; } .ebook-cover { aspect-ratio: 16 / 9; border-right: 0; border-bottom: 1px solid var(--line-soft); } }
+
+/* ---------- CTA card (WhatsApp) ---------- */
+.cta-card {
+  background: var(--paper); color: var(--ink);
+  padding: clamp(1.8rem, 3vw, 2.6rem); border-radius: var(--radius);
+  text-align: center;
+  box-shadow: 0 30px 60px -34px oklch(0.18 0.03 255 / 0.8);
+  display: flex; flex-direction: column; align-items: center; gap: 0.7rem;
+}
+.cta-card-ico {
+  font-size: 2.2rem; color: var(--gold-deep);
+  width: 64px; height: 64px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%; margin-bottom: 0.3rem;
+}
+.cta-card-t { font-family: var(--serif); font-size: 1.5rem; font-weight: 500; }
+.cta-card-d { color: var(--ink-2); font-size: 0.98rem; max-width: 30ch; }
+.cta-card .cta-submit { width: 100%; justify-content: center; margin-top: 0.4rem; }
+.cta-card-num { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); letter-spacing: 0.02em; }
+
+/* ---------- Image slots (clique para upload) ---------- */
+image-slot { display: block; }
+img.hero-ph { width: 100%; height: auto; aspect-ratio: 4 / 5; border-radius: var(--radius); object-fit: cover; object-position: center; display: block; border: 1px solid var(--line-soft); background: var(--ink-deep); }
+.eco-video { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--ink-deep); }
+.eco-video iframe { width: 100%; height: 100%; display: block; border: 0; }
+image-slot.eco-ph { width: 100%; height: auto; aspect-ratio: 4 / 3; border-radius: var(--radius); }
+image-slot.ebook-cover { width: 100%; height: 100%; aspect-ratio: 3 / 4; border-right: 1px solid var(--line-soft); }
+@media (max-width: 480px) { image-slot.ebook-cover { aspect-ratio: 16 / 9; border-right: 0; border-bottom: 1px solid var(--line-soft); } }
+
+/* ---------- Reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+</style>
+<script>
+/* BEGIN USAGE */
+/**
+ * <image-slot> — user-fillable image placeholder.
+ *
+ * Drop this into a deck, mockup, or page wherever you want the user to
+ * supply an image. You control the slot's shape and size; the user fills it
+ * by dragging an image file onto it (or clicking to browse). The dropped
+ * image persists across reloads via a .image-slots.state.json sidecar —
+ * same read-via-fetch / write-via-window.omelette pattern as
+ * design_canvas.jsx, so the filled slot shows on share links, downloaded
+ * zips, and PPTX export. Outside the omelette runtime the slot is read-only.
+ *
+ * The host bridge only allows sidecar writes at the project root, so the
+ * HTML that uses this component is assumed to live at the project root too
+ * (same constraint as design_canvas.jsx).
+ *
+ * Attributes:
+ *   id           Persistence key. REQUIRED for the drop to survive reload —
+ *                every slot on the page needs a distinct id.
+ *   shape        'rect' | 'rounded' | 'circle' | 'pill'   (default 'rounded')
+ *                'circle' applies 50% border-radius; on a non-square slot
+ *                that's an ellipse — set equal width and height for a true
+ *                circle.
+ *   radius       Corner radius in px for 'rounded'.       (default 12)
+ *   mask         Any CSS clip-path value. Overrides `shape` — use this for
+ *                hexagons, blobs, arbitrary polygons.
+ *   fit          object-fit: cover | contain | fill.       (default 'cover')
+ *                With cover (the default) double-clicking the filled slot
+ *                enters a reframe mode: the whole image spills past the mask
+ *                (translucent outside, opaque inside), drag to reposition,
+ *                corner-drag to scale. The crop persists alongside the image
+ *                in the sidecar. contain/fill stay static.
+ *   position     object-position for fit=contain|fill.     (default '50% 50%')
+ *   placeholder  Empty-state caption.                      (default 'Drop an image')
+ *   src          Optional initial/fallback image URL. A user drop overrides
+ *                it; clearing the drop reveals src again.
+ *
+ * Size and layout come from ordinary CSS on the element — width/height
+ * inline or from a parent grid — so it composes with any layout.
+ *
+ * Usage:
+ *   <image-slot id="hero"   style="width:800px;height:450px" shape="rounded" radius="20"
+ *               placeholder="Drop a hero image"></image-slot>
+ *   <image-slot id="avatar" style="width:120px;height:120px" shape="circle"></image-slot>
+ *   <image-slot id="kite"   style="width:300px;height:300px"
+ *               mask="polygon(50% 0, 100% 50%, 50% 100%, 0 50%)"></image-slot>
+ */
+/* END USAGE */
+
+(() => {
+  const STATE_FILE = '.image-slots.state.json';
+  // 2× a ~600px slot in a 1920-wide deck — retina-sharp without making the
+  // sidecar enormous. A 1200px WebP at q=0.85 is ~150-300KB.
+  const MAX_DIM = 1200;
+  // Raster formats only. SVG is excluded (can carry script; createImageBitmap
+  // on SVG blobs is inconsistent). GIF is excluded because the canvas
+  // re-encode keeps only the first frame, so an animated GIF would silently
+  // go still — better to reject than surprise.
+  const ACCEPT = ['image/png', 'image/jpeg', 'image/webp', 'image/avif'];
+
+  // ── Shared sidecar store ────────────────────────────────────────────────
+  // One fetch + immediate write-on-change for every <image-slot> on the
+  // page. Reads via fetch() so viewing works anywhere the HTML and sidecar
+  // are served together; writes go through window.omelette.writeFile, which
+  // the host allowlists to *.state.json basenames only.
+  const subs = new Set();
+  let slots = {};
+  // ids explicitly cleared before the sidecar fetch resolved — otherwise
+  // the merge below can't tell "never set" from "just deleted" and would
+  // resurrect the sidecar's stale value.
+  const tombstones = new Set();
+  let loaded = false;
+  let loadP = null;
+
+  function load() {
+    if (loadP) return loadP;
+    loadP = fetch(STATE_FILE)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        // Merge: sidecar loses to any in-memory change that raced ahead of
+        // the fetch (drop or clear) so neither is clobbered by hydration.
+        if (j && typeof j === 'object') {
+          const merged = Object.assign({}, j, slots);
+          // A framing-only write that raced ahead of hydration must not
+          // drop a user image that's only on disk — inherit u from the
+          // sidecar for any in-memory entry that lacks one.
+          for (const k in slots) {
+            if (merged[k] && !merged[k].u && j[k]) {
+              merged[k].u = typeof j[k] === 'string' ? j[k] : j[k].u;
+            }
+          }
+          for (const id of tombstones) delete merged[id];
+          slots = merged;
+        }
+        tombstones.clear();
+      })
+      .catch(() => {})
+      .then(() => { loaded = true; subs.forEach((fn) => fn()); });
+    return loadP;
+  }
+
+  // Serialize writes so two near-simultaneous drops on different slots
+  // can't reorder at the backend and leave the sidecar with only the
+  // first. A save requested mid-flight just marks dirty and re-fires on
+  // completion with the then-current slots.
+  let saving = false;
+  let saveDirty = false;
+  function save() {
+    if (saving) { saveDirty = true; return; }
+    const w = window.omelette && window.omelette.writeFile;
+    if (!w) return;
+    saving = true;
+    Promise.resolve(w(STATE_FILE, JSON.stringify(slots)))
+      .catch(() => {})
+      .then(() => { saving = false; if (saveDirty) { saveDirty = false; save(); } });
+  }
+
+  const S_MAX = 5;
+  const clampS = (s) => Math.max(1, Math.min(S_MAX, s));
+
+  // Normalize a stored slot value. Pre-reframe sidecars stored a bare
+  // data-URL string; newer ones store {u, s, x, y}. Either shape is valid.
+  function getSlot(id) {
+    const v = slots[id];
+    if (!v) return null;
+    return typeof v === 'string' ? { u: v, s: 1, x: 0, y: 0 } : v;
+  }
+
+  function setSlot(id, val) {
+    if (!id) return;
+    if (val) { slots[id] = val; tombstones.delete(id); }
+    else { delete slots[id]; if (!loaded) tombstones.add(id); }
+    subs.forEach((fn) => fn());
+    // A drop is rare + high-value — write immediately so nav-away can't lose
+    // it. Gate on the initial read so we don't overwrite a sidecar we haven't
+    // merged yet; the merge in load() keeps this change once the read lands.
+    if (loaded) save(); else load().then(save);
+  }
+
+  // ── Image downscale ─────────────────────────────────────────────────────
+  // Encode through a canvas so the sidecar carries resized bytes, not the
+  // raw upload. Longest side is capped at 2× the slot's rendered width
+  // (retina) and at MAX_DIM. WebP keeps alpha and is ~10× smaller than PNG
+  // for photos, so there's no need for per-image format picking.
+  async function toDataUrl(file, targetW) {
+    const bitmap = await createImageBitmap(file);
+    try {
+      const cap = Math.min(MAX_DIM, Math.max(1, Math.round(targetW * 2)) || MAX_DIM);
+      const scale = Math.min(1, cap / Math.max(bitmap.width, bitmap.height));
+      const w = Math.max(1, Math.round(bitmap.width * scale));
+      const h = Math.max(1, Math.round(bitmap.height * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(bitmap, 0, 0, w, h);
+      return canvas.toDataURL('image/webp', 0.85);
+    } finally {
+      bitmap.close && bitmap.close();
+    }
+  }
+
+  // ── Custom element ──────────────────────────────────────────────────────
+  const stylesheet =
+    ':host{display:inline-block;position:relative;vertical-align:top;' +
+    '  font:13px/1.3 system-ui,-apple-system,sans-serif;color:rgba(0,0,0,.55);width:240px;height:160px}' +
+    '.frame{position:absolute;inset:0;overflow:hidden;background:rgba(0,0,0,.04)}' +
+    // .frame img (clipped) and .spill (unclipped ghost + handles) share the
+    // same left/top/width/height in frame-%, computed by _applyView(), so the
+    // inside-mask crop and the outside-mask spill stay pixel-aligned.
+    '.frame img{position:absolute;max-width:none;transform:translate(-50%,-50%);' +
+    '  -webkit-user-drag:none;user-select:none;touch-action:none}' +
+    // Reframe mode (double-click): the full image spills past the mask. The
+    // spill layer is sized to the IMAGE bounds so its corners are where the
+    // resize handles belong. The ghost <img> inside is translucent; the real
+    // clipped <img> underneath shows the opaque in-mask crop.
+    '.spill{position:absolute;transform:translate(-50%,-50%);display:none;z-index:1;' +
+    '  cursor:grab;touch-action:none}' +
+    ':host([data-panning]) .spill{cursor:grabbing}' +
+    '.spill .ghost{position:absolute;inset:0;width:100%;height:100%;opacity:.35;' +
+    '  pointer-events:none;-webkit-user-drag:none;user-select:none;' +
+    '  box-shadow:0 0 0 1px rgba(0,0,0,.2),0 12px 32px rgba(0,0,0,.2)}' +
+    '.spill .handle{position:absolute;width:12px;height:12px;border-radius:50%;' +
+    '  background:#fff;box-shadow:0 0 0 1.5px #c96442,0 1px 3px rgba(0,0,0,.3);' +
+    '  transform:translate(-50%,-50%)}' +
+    '.spill .handle[data-c=nw]{left:0;top:0;cursor:nwse-resize}' +
+    '.spill .handle[data-c=ne]{left:100%;top:0;cursor:nesw-resize}' +
+    '.spill .handle[data-c=sw]{left:0;top:100%;cursor:nesw-resize}' +
+    '.spill .handle[data-c=se]{left:100%;top:100%;cursor:nwse-resize}' +
+    ':host([data-reframe]){z-index:10}' +
+    ':host([data-reframe]) .spill{display:block}' +
+    ':host([data-reframe]) .frame{box-shadow:0 0 0 2px #c96442}' +
+    '.empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;' +
+    '  justify-content:center;gap:6px;text-align:center;padding:12px;box-sizing:border-box;' +
+    '  cursor:pointer;user-select:none}' +
+    '.empty svg{opacity:.45}' +
+    '.empty .cap{max-width:90%;font-weight:500;letter-spacing:.01em}' +
+    '.empty .sub{font-size:11px}' +
+    '.empty .sub u{text-underline-offset:2px;text-decoration-color:rgba(0,0,0,.25)}' +
+    '.empty:hover .sub u{color:rgba(0,0,0,.75);text-decoration-color:currentColor}' +
+    ':host([data-over]) .frame{outline:2px solid #c96442;outline-offset:-2px;' +
+    '  background:rgba(201,100,66,.10)}' +
+    '.ring{position:absolute;inset:0;pointer-events:none;border:1.5px dashed rgba(0,0,0,.25);' +
+    '  transition:border-color .12s}' +
+    ':host([data-over]) .ring{border-color:#c96442}' +
+    ':host([data-filled]) .ring{display:none}' +
+    // Controls sit BELOW the mask (top:100%), absolutely positioned so the
+    // author-declared slot height is unaffected. The gap is padding, not a
+    // top offset, so the hover target stays contiguous with the frame.
+    '.ctl{position:absolute;top:100%;left:50%;transform:translateX(-50%);padding-top:8px;' +
+    '  display:flex;gap:6px;opacity:0;pointer-events:none;transition:opacity .12s;z-index:2;' +
+    '  white-space:nowrap}' +
+    ':host([data-filled][data-editable]:hover) .ctl,:host([data-reframe]) .ctl' +
+    '  {opacity:1;pointer-events:auto}' +
+    '.ctl button{appearance:none;border:0;border-radius:6px;padding:5px 10px;cursor:pointer;' +
+    '  background:rgba(0,0,0,.65);color:#fff;font:11px/1 system-ui,-apple-system,sans-serif;' +
+    '  backdrop-filter:blur(6px)}' +
+    '.ctl button:hover{background:rgba(0,0,0,.8)}' +
+    '.err{position:absolute;left:8px;bottom:8px;right:8px;color:#b3261e;font-size:11px;' +
+    '  background:rgba(255,255,255,.85);padding:4px 6px;border-radius:5px;pointer-events:none}';
+
+  const icon =
+    '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>' +
+    '<path d="m21 15-5-5L5 21"/></svg>';
+
+  class ImageSlot extends HTMLElement {
+    static get observedAttributes() {
+      return ['shape', 'radius', 'mask', 'fit', 'position', 'placeholder', 'src', 'id'];
+    }
+
+    constructor() {
+      super();
+      const root = this.attachShadow({ mode: 'open' });
+      // .spill and .ctl sit OUTSIDE .frame so overflow:hidden + border-radius
+      // on the frame (circle, pill, rounded) can't clip them.
+      root.innerHTML =
+        '<style>' + stylesheet + '</style>' +
+        '<div class="frame" part="frame">' +
+        '  <img part="image" alt="" draggable="false" style="display:none">' +
+        '  <div class="empty" part="empty">' + icon +
+        '    <div class="cap"></div>' +
+        '    <div class="sub">or <u>browse files</u></div></div>' +
+        '  <div class="ring" part="ring"></div>' +
+        '</div>' +
+        '<div class="spill">' +
+        '  <img class="ghost" alt="" draggable="false">' +
+        '  <div class="handle" data-c="nw"></div><div class="handle" data-c="ne"></div>' +
+        '  <div class="handle" data-c="sw"></div><div class="handle" data-c="se"></div>' +
+        '</div>' +
+        '<div class="ctl"><button data-act="replace" title="Replace image">Replace</button>' +
+        '  <button data-act="clear" title="Remove image">Remove</button></div>' +
+        '<input type="file" accept="' + ACCEPT.join(',') + '" hidden>';
+      this._frame = root.querySelector('.frame');
+      this._ring = root.querySelector('.ring');
+      this._img = root.querySelector('.frame img');
+      this._empty = root.querySelector('.empty');
+      this._cap = root.querySelector('.cap');
+      this._sub = root.querySelector('.sub');
+      this._spill = root.querySelector('.spill');
+      this._ghost = root.querySelector('.ghost');
+      this._err = null;
+      this._input = root.querySelector('input');
+      this._depth = 0;
+      this._gen = 0;
+      this._view = { s: 1, x: 0, y: 0 };
+      this._subFn = () => this._render();
+      // Shadow-DOM listeners live with the shadow DOM — bound once here so
+      // disconnect/reconnect (e.g. React remount) doesn't stack handlers.
+      this._empty.addEventListener('click', () => this._input.click());
+      root.addEventListener('click', (e) => {
+        const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
+        if (act === 'replace') { this._exitReframe(true); this._input.click(); }
+        if (act === 'clear') {
+          this._exitReframe(false);
+          this._gen++;
+          this._local = null;
+          if (this.id) setSlot(this.id, null); else this._render();
+        }
+      });
+      this._input.addEventListener('change', () => {
+        const f = this._input.files && this._input.files[0];
+        if (f) this._ingest(f);
+        this._input.value = '';
+      });
+      // naturalWidth/Height aren't known until load — re-apply so the cover
+      // baseline is computed from real dimensions, not the 100%×100% fallback.
+      this._img.addEventListener('load', () => this._applyView());
+      // Gated on editable + fit=cover so share links and contain/fill slots
+      // stay static.
+      this.addEventListener('dblclick', (e) => {
+        if (!this.hasAttribute('data-editable') || !this._reframes()) return;
+        e.preventDefault();
+        if (this.hasAttribute('data-reframe')) this._exitReframe(true);
+        else this._enterReframe();
+      });
+      // Pan + resize both originate on the spill layer. A handle pointerdown
+      // drives an aspect-locked resize anchored at the opposite corner; any
+      // other pointerdown on the spill pans. Offsets are frame-% so a
+      // reframed slot survives responsive resize / PPTX export.
+      this._spill.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 || !this.hasAttribute('data-reframe')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        this._spill.setPointerCapture(e.pointerId);
+        const rect = this.getBoundingClientRect();
+        const fw = rect.width || 1, fh = rect.height || 1;
+        const corner = e.target.getAttribute && e.target.getAttribute('data-c');
+        let move;
+        if (corner) {
+          // Resize about the OPPOSITE corner. Viewport-px throughout (rect
+          // fw/fh, not clientWidth) so the math survives a transform:scale()
+          // ancestor — deck_stage renders slides scaled-to-fit.
+          const iw = this._img.naturalWidth || 1, ih = this._img.naturalHeight || 1;
+          const base = Math.max(fw / iw, fh / ih);
+          const sx = corner.includes('e') ? 1 : -1;
+          const sy = corner.includes('s') ? 1 : -1;
+          const s0 = this._view.s;
+          const w0 = iw * base * s0, h0 = ih * base * s0;
+          const cx0 = (50 + this._view.x) / 100 * fw;
+          const cy0 = (50 + this._view.y) / 100 * fh;
+          const ox = cx0 - sx * w0 / 2, oy = cy0 - sy * h0 / 2;
+          const diag0 = Math.hypot(w0, h0);
+          const ux = sx * w0 / diag0, uy = sy * h0 / diag0;
+          move = (ev) => {
+            const proj = (ev.clientX - rect.left - ox) * ux +
+                         (ev.clientY - rect.top - oy) * uy;
+            const s = clampS(s0 * proj / diag0);
+            const d = diag0 * s / s0;
+            this._view.s = s;
+            this._view.x = (ox + ux * d / 2) / fw * 100 - 50;
+            this._view.y = (oy + uy * d / 2) / fh * 100 - 50;
+            this._clampView();
+            this._applyView();
+          };
+        } else {
+          this.setAttribute('data-panning', '');
+          const start = { px: e.clientX, py: e.clientY, x: this._view.x, y: this._view.y };
+          move = (ev) => {
+            this._view.x = start.x + (ev.clientX - start.px) / fw * 100;
+            this._view.y = start.y + (ev.clientY - start.py) / fh * 100;
+            this._clampView();
+            this._applyView();
+          };
+        }
+        const up = () => {
+          try { this._spill.releasePointerCapture(e.pointerId); } catch {}
+          this._spill.removeEventListener('pointermove', move);
+          this._spill.removeEventListener('pointerup', up);
+          this._spill.removeEventListener('pointercancel', up);
+          this.removeAttribute('data-panning');
+          this._dragUp = null;
+        };
+        // Stashed so _exitReframe (Escape / outside-click mid-drag) can
+        // tear the capture + listeners down synchronously.
+        this._dragUp = up;
+        this._spill.addEventListener('pointermove', move);
+        this._spill.addEventListener('pointerup', up);
+        this._spill.addEventListener('pointercancel', up);
+      });
+      // Wheel zoom stays available inside reframe mode as a trackpad nicety —
+      // zooms toward the cursor (offset' = cursor·(1-k) + offset·k).
+      this.addEventListener('wheel', (e) => {
+        if (!this.hasAttribute('data-reframe')) return;
+        e.preventDefault();
+        const r = this.getBoundingClientRect();
+        const cx = (e.clientX - r.left) / r.width * 100 - 50;
+        const cy = (e.clientY - r.top) / r.height * 100 - 50;
+        const prev = this._view.s;
+        const next = clampS(prev * Math.pow(1.0015, -e.deltaY));
+        if (next === prev) return;
+        const k = next / prev;
+        this._view.s = next;
+        this._view.x = cx * (1 - k) + this._view.x * k;
+        this._view.y = cy * (1 - k) + this._view.y * k;
+        this._clampView();
+        this._applyView();
+      }, { passive: false });
+    }
+
+    connectedCallback() {
+      // Warn once per page — an id-less slot works for the session but
+      // cannot persist, and two id-less slots would share nothing.
+      if (!this.id && !ImageSlot._warned) {
+        ImageSlot._warned = true;
+        console.warn('<image-slot> without an id will not persist its dropped image.');
+      }
+      this.addEventListener('dragenter', this);
+      this.addEventListener('dragover', this);
+      this.addEventListener('dragleave', this);
+      this.addEventListener('drop', this);
+      subs.add(this._subFn);
+      // width%/height% in _applyView encode the frame aspect at call time —
+      // a host resize (responsive grid, pane divider) would stretch the
+      // image until the next _render. Re-render on size change: _render()
+      // re-seeds _view from stored before clamp/apply, so a shrink→grow
+      // cycle round-trips instead of ratcheting x/y toward the narrower
+      // frame's clamp range.
+      this._ro = new ResizeObserver(() => this._render());
+      this._ro.observe(this);
+      load();
+      this._render();
+    }
+
+    disconnectedCallback() {
+      subs.delete(this._subFn);
+      this.removeEventListener('dragenter', this);
+      this.removeEventListener('dragover', this);
+      this.removeEventListener('dragleave', this);
+      this.removeEventListener('drop', this);
+      if (this._ro) { this._ro.disconnect(); this._ro = null; }
+      this._exitReframe(false);
+    }
+
+    _enterReframe() {
+      if (this.hasAttribute('data-reframe')) return;
+      this.setAttribute('data-reframe', '');
+      this._applyView();
+      // Close on click outside (the spill handler stopPropagation()s so
+      // in-image drags don't reach this) and on Escape. Listeners are held
+      // on the instance so _exitReframe / disconnectedCallback can detach
+      // exactly what was attached.
+      this._outside = (e) => {
+        if (e.composedPath && e.composedPath().includes(this)) return;
+        this._exitReframe(true);
+      };
+      this._esc = (e) => { if (e.key === 'Escape') this._exitReframe(true); };
+      document.addEventListener('pointerdown', this._outside, true);
+      document.addEventListener('keydown', this._esc, true);
+    }
+
+    _exitReframe(commit) {
+      if (!this.hasAttribute('data-reframe')) return;
+      if (this._dragUp) this._dragUp();
+      this.removeAttribute('data-reframe');
+      this.removeAttribute('data-panning');
+      if (this._outside) document.removeEventListener('pointerdown', this._outside, true);
+      if (this._esc) document.removeEventListener('keydown', this._esc, true);
+      this._outside = this._esc = null;
+      if (commit) this._commitView();
+    }
+
+    attributeChangedCallback() { if (this.shadowRoot) this._render(); }
+
+    // handleEvent — one listener object for all four drag events keeps the
+    // add/remove symmetric and the depth counter correct.
+    handleEvent(e) {
+      if (e.type === 'dragenter' || e.type === 'dragover') {
+        // Without preventDefault the browser never fires 'drop'.
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+        if (e.type === 'dragenter') this._depth++;
+        this.setAttribute('data-over', '');
+      } else if (e.type === 'dragleave') {
+        // dragenter/leave fire for every descendant crossing — count depth
+        // so hovering the icon inside the empty state doesn't flicker.
+        if (--this._depth <= 0) { this._depth = 0; this.removeAttribute('data-over'); }
+      } else if (e.type === 'drop') {
+        e.preventDefault();
+        e.stopPropagation();
+        this._depth = 0;
+        this.removeAttribute('data-over');
+        const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) this._ingest(f);
+      }
+    }
+
+    async _ingest(file) {
+      this._setError(null);
+      if (!file || ACCEPT.indexOf(file.type) < 0) {
+        this._setError('Drop a PNG, JPEG, WebP, or AVIF image.');
+        return;
+      }
+      // toDataUrl can take hundreds of ms on a large photo. A Clear or a
+      // newer drop during that window would be clobbered when this await
+      // resumes — bump + capture a generation so stale encodes bail.
+      const gen = ++this._gen;
+      try {
+        const w = this.clientWidth || this.offsetWidth || MAX_DIM;
+        const url = await toDataUrl(file, w);
+        if (gen !== this._gen) return;
+        // Only exit reframe once the new image is in hand — a rejected type
+        // or decode failure leaves the in-progress crop untouched.
+        this._exitReframe(false);
+        const val = { u: url, s: 1, x: 0, y: 0 };
+        setSlot(this.id || '', val);
+        // Keep a session-local copy for id-less slots so the drop still
+        // shows, even though it cannot persist.
+        if (!this.id) { this._local = val; this._render(); }
+      } catch (err) {
+        if (gen !== this._gen) return;
+        this._setError('Could not read that image.');
+        console.warn('<image-slot> ingest failed:', err);
+      }
+    }
+
+    _setError(msg) {
+      if (this._err) { this._err.remove(); this._err = null; }
+      if (!msg) return;
+      const d = document.createElement('div');
+      d.className = 'err'; d.textContent = msg;
+      this.shadowRoot.appendChild(d);
+      this._err = d;
+      setTimeout(() => { if (this._err === d) { d.remove(); this._err = null; } }, 3000);
+    }
+
+    // Reframing (pan/resize) is only meaningful for fit=cover — contain/fill
+    // keep the old object-fit path and double-click is a no-op.
+    _reframes() {
+      return this.hasAttribute('data-filled') &&
+        (this.getAttribute('fit') || 'cover') === 'cover';
+    }
+
+    // Cover-baseline geometry, shared by clamp/apply/resize. Null until the
+    // img has loaded (naturalWidth is 0 before that) or when the slot has no
+    // layout box — ResizeObserver fires with a 0×0 rect under display:none,
+    // and clamping against a degenerate 1×1 frame would silently pull the
+    // stored pan toward zero.
+    _geom() {
+      const iw = this._img.naturalWidth, ih = this._img.naturalHeight;
+      const fw = this.clientWidth, fh = this.clientHeight;
+      if (!iw || !ih || !fw || !fh) return null;
+      return { iw, ih, fw, fh, base: Math.max(fw / iw, fh / ih) };
+    }
+
+    _clampView() {
+      // Pan range on each axis is half the overflow past the frame edge.
+      const g = this._geom();
+      if (!g) return;
+      const mx = Math.max(0, (g.iw * g.base * this._view.s / g.fw - 1) * 50);
+      const my = Math.max(0, (g.ih * g.base * this._view.s / g.fh - 1) * 50);
+      this._view.x = Math.max(-mx, Math.min(mx, this._view.x));
+      this._view.y = Math.max(-my, Math.min(my, this._view.y));
+    }
+
+    _applyView() {
+      const g = this._geom();
+      const fit = this.getAttribute('fit') || 'cover';
+      if (fit !== 'cover' || !g) {
+        // Non-cover, or dimensions not known yet (before img load).
+        this._img.style.width = '100%';
+        this._img.style.height = '100%';
+        this._img.style.left = '50%';
+        this._img.style.top = '50%';
+        this._img.style.objectFit = fit;
+        this._img.style.objectPosition = this.getAttribute('position') || '50% 50%';
+        return;
+      }
+      // Cover baseline: img fills the frame on its tighter axis at s=1, so
+      // pan works immediately on the overflowing axis without zooming first.
+      // Width/height and left/top are all frame-% — depends only on the
+      // frame aspect ratio, so a responsive resize keeps the same crop. The
+      // spill layer mirrors the same box so its corners = image corners.
+      const k = g.base * this._view.s;
+      const w = (g.iw * k / g.fw * 100) + '%';
+      const h = (g.ih * k / g.fh * 100) + '%';
+      const l = (50 + this._view.x) + '%';
+      const t = (50 + this._view.y) + '%';
+      this._img.style.width = w; this._img.style.height = h;
+      this._img.style.left = l; this._img.style.top = t;
+      this._img.style.objectFit = '';
+      this._spill.style.width = w; this._spill.style.height = h;
+      this._spill.style.left = l; this._spill.style.top = t;
+    }
+
+    _commitView() {
+      const v = { s: this._view.s, x: this._view.x, y: this._view.y };
+      if (this._userUrl) v.u = this._userUrl;
+      // Framing-only (no u) persists too so an author-src slot remembers its
+      // crop; clearing the sidecar still falls through to src=.
+      if (this.id) setSlot(this.id, v);
+      else { this._local = v; }
+    }
+
+    _render() {
+      // Shape / mask. Presets use border-radius so the dashed ring can
+      // follow the rounded outline; clip-path is only applied for an
+      // explicit `mask` (the ring is hidden there since a rectangle
+      // dashed border chopped by an arbitrary polygon looks broken).
+      const mask = this.getAttribute('mask');
+      const shape = (this.getAttribute('shape') || 'rounded').toLowerCase();
+      let radius = '';
+      if (shape === 'circle') radius = '50%';
+      else if (shape === 'pill') radius = '9999px';
+      else if (shape === 'rounded') {
+        const n = parseFloat(this.getAttribute('radius'));
+        radius = (Number.isFinite(n) ? n : 12) + 'px';
+      }
+      this._frame.style.borderRadius = mask ? '' : radius;
+      this._frame.style.clipPath = mask || '';
+      this._ring.style.borderRadius = mask ? '' : radius;
+      this._ring.style.display = mask ? 'none' : '';
+
+      // Controls and reframe entry gate on this so share links stay read-only.
+      const editable = !!(window.omelette && window.omelette.writeFile);
+      this.toggleAttribute('data-editable', editable);
+      this._sub.style.display = editable ? '' : 'none';
+
+      // Content. The sidecar is also writable by the agent's write_file
+      // tool, so its value isn't guaranteed canvas-originated — only accept
+      // data:image/ URLs from it. The `src` attribute is author-controlled
+      // (Claude wrote it into the HTML) so it passes through unchanged.
+      let stored = this.id ? getSlot(this.id) : this._local;
+      if (stored && stored.u && !/^data:image\//i.test(stored.u)) stored = null;
+      const srcAttr = this.getAttribute('src') || '';
+      this._userUrl = (stored && stored.u) || null;
+      const url = this._userUrl || srcAttr;
+      // Don't clobber an in-flight reframe with a store-triggered re-render.
+      if (!this.hasAttribute('data-reframe')) {
+        this._view = {
+          s: stored && Number.isFinite(stored.s) ? clampS(stored.s) : 1,
+          x: stored && Number.isFinite(stored.x) ? stored.x : 0,
+          y: stored && Number.isFinite(stored.y) ? stored.y : 0,
+        };
+      }
+      this._cap.textContent = this.getAttribute('placeholder') || 'Drop an image';
+      // Toggle via style.display — the [hidden] attribute alone loses to
+      // the display:flex / display:block rules in the stylesheet above.
+      if (url) {
+        if (this._img.getAttribute('src') !== url) {
+          this._img.src = url;
+          this._ghost.src = url;
+        }
+        this._img.style.display = 'block';
+        this._empty.style.display = 'none';
+        this.setAttribute('data-filled', '');
+        this._clampView();
+        this._applyView();
+      } else {
+        this._img.style.display = 'none';
+        this._img.removeAttribute('src');
+        this._ghost.removeAttribute('src');
+        this._empty.style.display = 'flex';
+        this.removeAttribute('data-filled');
+      }
+    }
+  }
+
+  if (!customElements.get('image-slot')) {
+    customElements.define('image-slot', ImageSlot);
+  }
+})();
+
+</script>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="site-nav" id="topo">
+  <div class="wrap nav-inner">
+    <a href="#topo" class="brand" aria-label="Um Caminho de Saída — início">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Um Caminho<br><span class="brand-sub">de&nbsp;Saída</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#sonhos">Os sonhos</a>
+      <a href="#metodo">O método</a>
+      <a href="#ecossistema">Ecossistema</a>
+      <a href="#materiais">E-books</a>
+      <a href="#como">Como funciona</a>
+    </nav>
+    <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20agendar%20meu%20diagn%C3%B3stico%20gratuito." target="_blank" rel="noopener" class="btn btn-primary nav-cta">Falar no WhatsApp</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow reveal">Organização de renda e patrimônio · exclusivo para médicos</p>
+      <h1 class="display reveal">Existe <em>um caminho de saída</em> entre o plantão de hoje e a vida que você quer amanhã.</h1>
+      <p class="lead reveal">Aposentar com tranquilidade. A casa, o carro, a viagem. E a certeza de que sua família segue amparada — mesmo que um dia você não esteja aqui. Nós transformamos a renda do médico em um plano que se sustenta sozinho.</p>
+      <div class="hero-actions reveal">
+        <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20agendar%20meu%20diagn%C3%B3stico%20gratuito." target="_blank" rel="noopener" class="btn btn-gold"><span class="wa-ico" aria-hidden="true">✆</span> Agendar diagnóstico no WhatsApp <span class="arrow">→</span></a>
+        <a href="#sonhos" class="btn btn-ghost">Entender o método</a>
+      </div>
+      <p class="hero-note reveal">Diagnóstico individual · sem custo · sigilo absoluto</p>
+    </div>
+    <div class="hero-media reveal">
+      <img id="hero-foto" class="hero-ph" alt="Médico recém-formado em atuação" src="images/medico-consultorio.jpg" style="object-position:40% 45%">
+      <div class="hero-stat">
+        <span class="serif-num hero-stat-num">01</span>
+        <span class="hero-stat-label">Um método.<br>Um caminho de saída.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A PERGUNTA / OS SONHOS ============ -->
+<section class="sonhos" id="sonhos">
+  <div class="wrap">
+    <div class="sonhos-head">
+      <p class="eyebrow reveal">A pergunta que ninguém faz ao médico</p>
+      <h2 class="h2 reveal">Será que esses sonhos são <em>possíveis</em> para quem cuida da vida dos outros?</h2>
+      <p class="lead reveal sonhos-lead">O médico fatura bem e, ainda assim, sente que o dinheiro não vira patrimônio. A rotina consome o tempo, a renda chega desorganizada e o futuro fica sempre para depois. Nós começamos pelo que importa pra você — do menor objetivo ao maior — e construímos o caminho até lá.</p>
+    </div>
+
+    <ol class="ladder reveal">
+      <li class="rung">
+        <span class="rung-num serif-num">01</span>
+        <div class="rung-body">
+          <h3 class="h3">Organizar a renda</h3>
+          <p class="muted">Saber para onde vai cada real, separar pró-labore de patrimônio e parar de viver no fluxo de caixa do plantão.</p>
+        </div>
+      </li>
+      <li class="rung">
+        <span class="rung-num serif-num">02</span>
+        <div class="rung-body">
+          <h3 class="h3">O carro, a viagem, a casa</h3>
+          <p class="muted">Realizar os objetivos de vida com planejamento — sem comprometer o futuro nem sacrificar o presente.</p>
+        </div>
+      </li>
+      <li class="rung">
+        <span class="rung-num serif-num">03</span>
+        <div class="rung-body">
+          <h3 class="h3">Aposentar com tranquilidade</h3>
+          <p class="muted">Construir uma renda que não dependa do bisturi nem da escala. Um dia, plantão será escolha — não necessidade.</p>
+        </div>
+      </li>
+      <li class="rung rung-peak">
+        <span class="rung-num serif-num">04</span>
+        <div class="rung-body">
+          <h3 class="h3">Proteger quem você ama</h3>
+          <p class="muted">Garantir renda para a sua família mesmo que um dia você não esteja aqui. O maior dos objetivos — e o que mais costuma ficar esquecido.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ O MÉTODO ============ -->
+<section class="metodo" id="metodo">
+  <div class="wrap metodo-grid">
+    <div class="metodo-copy">
+      <p class="eyebrow on-dark reveal">O motor do caminho</p>
+      <h2 class="h2 reveal">Um método de <em>perícia médica</em> de sucesso.</h2>
+      <p class="lead reveal metodo-lead">A perícia médica é uma fonte de renda nobre, previsível e escalável — e quase sempre subaproveitada. Nós estruturamos essa atuação como o motor do seu plano: uma receita que você controla, organiza e faz crescer com método, não com sorte.</p>
+      <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20estruturar%20minha%20at%C3%BAa%C3%A7%C3%A3o%20em%20per%C3%ADcia%20m%C3%A9dica." target="_blank" rel="noopener" class="btn btn-gold reveal"><span class="wa-ico" aria-hidden="true">✆</span> Quero estruturar minha perícia <span class="arrow">→</span></a>
+    </div>
+    <div class="metodo-pillars reveal">
+      <div class="pillar">
+        <span class="pillar-k serif-num">A</span>
+        <h3 class="pillar-t">Receita previsível</h3>
+        <p class="pillar-d">Uma atuação que não depende de escala, com demanda constante e remuneração definida.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-k serif-num">B</span>
+        <h3 class="pillar-t">Tempo respeitado</h3>
+        <p class="pillar-d">Mais renda por hora trabalhada, devolvendo as horas que o plantão tira da sua vida.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-k serif-num">C</span>
+        <h3 class="pillar-t">Crescimento com método</h3>
+        <p class="pillar-d">Processos, ferramentas e mentoria para sair do zero e ganhar consistência — passo a passo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ECOSSISTEMA / LOOP VIRTUOSO ============ -->
+<section class="eco" id="ecossistema">
+  <div class="wrap">
+    <div class="eco-head">
+      <p class="eyebrow reveal">Ferramentas, tecnologia e acompanhamento</p>
+      <h2 class="h2 reveal">Um ecossistema em <em>loop virtuoso</em> — cada etapa alimenta a próxima.</h2>
+      <p class="lead reveal eco-lead">Não é um curso solto nem uma planilha esquecida na gaveta. É um sistema integrado: a renda da perícia abastece a organização, que constrói o patrimônio, que sustenta a proteção da sua família — e devolve mais tranquilidade para você produzir. O ciclo gira, e gira maior a cada volta.</p>
+    </div>
+
+    <ol class="loop reveal">
+      <li class="loop-node">
+        <span class="loop-num serif-num">01</span>
+        <h3 class="loop-t">Renda</h3>
+        <p class="loop-d">A perícia médica estruturada gera receita previsível e crescente.</p>
+      </li>
+      <li class="loop-arrow" aria-hidden="true">→</li>
+      <li class="loop-node">
+        <span class="loop-num serif-num">02</span>
+        <h3 class="loop-t">Organização</h3>
+        <p class="loop-d">Cada real ganha destino: custo, reserva, patrimônio e objetivos.</p>
+      </li>
+      <li class="loop-arrow" aria-hidden="true">→</li>
+      <li class="loop-node">
+        <span class="loop-num serif-num">03</span>
+        <h3 class="loop-t">Patrimônio</h3>
+        <p class="loop-d">O dinheiro organizado vira ativos que trabalham por você.</p>
+      </li>
+      <li class="loop-arrow" aria-hidden="true">→</li>
+      <li class="loop-node">
+        <span class="loop-num serif-num">04</span>
+        <h3 class="loop-t">Proteção</h3>
+        <p class="loop-d">Sua família amparada e seu futuro garantido — em qualquer cenário.</p>
+      </li>
+    </ol>
+    <p class="loop-return reveal"><span class="loop-return-arrow" aria-hidden="true">↻</span> E o ciclo recomeça — agora com mais base, mais renda e menos esforço.</p>
+
+    <div class="eco-tools reveal">
+      <div class="eco-tools-copy">
+        <h3 class="h3">Tecnologia que mantém o ciclo girando</h3>
+        <p class="muted">Plataforma de acompanhamento, indicadores de evolução, materiais de perícia e mentoria contínua — tudo em um só lugar, para você não depender da memória nem da força de vontade.</p>
+        <ul class="eco-list">
+          <li>Painel de renda e patrimônio em tempo real</li>
+          <li>Trilha de capacitação em perícia médica</li>
+          <li>Acompanhamento individual e comunidade de pares</li>
+        </ul>
+        <a href="https://periciascamara.github.io/minas_summit_veridicus/" target="_blank" rel="noopener" class="btn btn-ghost eco-pitch-btn">Conhecer o ecossistema Veridicus IA <span class="arrow">↗</span></a>
+      </div>
+      <div class="eco-video">
+        <iframe src="https://www.youtube.com/embed/f3uJUJe3LQk?rel=0" title="Veridicus IA — apresentação" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MATERIAIS / E-BOOKS ============ -->
+<section class="materiais" id="materiais">
+  <div class="wrap">
+    <div class="materiais-head">
+      <p class="eyebrow reveal">Materiais para baixar</p>
+      <h2 class="h2 reveal">E-books para começar a trilhar o caminho <em>hoje</em>.</h2>
+      <p class="lead reveal materiais-lead">Dois guias completos sobre perícia médica e o ecossistema Veridicus IA. Abra, leia e salve em PDF — gratuitamente.</p>
+    </div>
+
+    <div class="ebooks">
+      <article class="ebook reveal">
+        <image-slot id="capa-veridicus" class="ebook-cover" shape="rect" placeholder="Clique para enviar a capa"></image-slot>
+        <div class="ebook-body">
+          <p class="ebook-kicker">E-book · Veridicus IA</p>
+          <h3 class="h3">Veridicus IA para médicos recém-formados</h3>
+          <p class="muted ebook-desc">Como transformar a perícia médica em uma fonte de renda nobre e previsível logo no início da carreira.</p>
+          <div class="ebook-actions">
+            <a href="https://drive.google.com/file/d/1oGGTcaUvmcjbfGtAtlDVwrP3ev-rvwkN/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-primary">Ler e baixar <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ebook reveal">
+        <image-slot id="capa-perito" class="ebook-cover" shape="rect" placeholder="Clique para enviar a capa"></image-slot>
+        <div class="ebook-body">
+          <p class="ebook-kicker">E-book · Perícia do Trabalho</p>
+          <h3 class="h3">O médico do trabalho como perito nato</h3>
+          <p class="muted ebook-desc">O caminho mais natural para o médico do trabalho assumir a perícia e multiplicar a própria renda.</p>
+          <div class="ebook-actions">
+            <a href="https://drive.google.com/file/d/1JYWZ_MOH3qlD54yESGBUoe_Iu5pOj7el/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-primary">Ler e baixar <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="como" id="como">
+  <div class="wrap">
+    <div class="como-head">
+      <p class="eyebrow reveal">Começar é simples</p>
+      <h2 class="h2 reveal">Três passos entre a dúvida de hoje e o plano que se sustenta.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-n serif-num">1</span>
+        <h3 class="h3">Diagnóstico</h3>
+        <p class="muted">Uma conversa individual e sigilosa para entender sua renda, seus objetivos e onde está o gargalo. Sem custo e sem compromisso.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-n serif-num">2</span>
+        <h3 class="h3">Plano e estruturação</h3>
+        <p class="muted">Montamos seu caminho de saída: a perícia como motor de renda, a organização do que entra e a estratégia de patrimônio e proteção.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-n serif-num">3</span>
+        <h3 class="h3">Acompanhamento</h3>
+        <p class="muted">Você entra no loop virtuoso com ferramentas e mentoria contínua, ajustando a rota enquanto o ciclo gira a seu favor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA DIAGNÓSTICO ============ -->
+<section class="cta" id="diagnostico">
+  <div class="wrap cta-grid">
+    <div class="cta-copy">
+      <p class="eyebrow on-dark reveal">Seu caminho de saída começa aqui</p>
+      <h2 class="h2 reveal">Agende seu diagnóstico gratuito.</h2>
+      <p class="lead reveal cta-lead">Em uma conversa, você enxerga onde sua renda está vazando e como transformá-la em um plano que cuida do seu futuro — e do da sua família.</p>
+    </div>
+    <form class="cta-form reveal" id="leadForm" aria-label="Agendar diagnóstico">
+      <div class="field-row">
+        <label class="field">
+          <span>Nome completo</span>
+          <input type="text" name="nome" placeholder="Dr(a). seu nome" required>
+        </label>
+        <label class="field">
+          <span>E-mail</span>
+          <input type="email" name="email" placeholder="voce@email.com" required>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span>Telefone</span>
+          <input type="tel" name="telefone" placeholder="(00) 00000-0000" required>
+        </label>
+        <label class="field">
+          <span>Cidade</span>
+          <input type="text" name="cidade" placeholder="Cidade / UF" required>
+        </label>
+      </div>
+      <label class="field">
+        <span>Atuação — área da medicina</span>
+        <input type="text" name="area" placeholder="Ex.: medicina do trabalho, ortopedia, perícia…" required>
+      </label>
+      <button type="submit" class="btn btn-gold cta-submit"><span class="wa-ico" aria-hidden="true">✆</span> Enviar e falar no WhatsApp <span class="arrow">→</span></button>
+      <p class="cta-fineprint">Atendimento individual · sigilo absoluto · resposta em até 24h úteis.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name on-dark">Um Caminho<br><span class="brand-sub">de&nbsp;Saída</span></span>
+    </div>
+    <p class="footer-tag">Organização de renda e patrimônio para médicos.</p>
+    <nav class="footer-links" aria-label="Rodapé">
+      <a href="#sonhos">Os sonhos</a>
+      <a href="#metodo">O método</a>
+      <a href="#ecossistema">Ecossistema</a>
+      <a href="#materiais">E-books</a>
+      <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20agendar%20meu%20diagn%C3%B3stico%20gratuito." target="_blank" rel="noopener">WhatsApp</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© 2026 Um Caminho de Saída.</span>
+    <span>Este material tem caráter informativo e não constitui recomendação individual de investimento.</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+    function showAll() { els.forEach(function (el) { el.classList.add('in'); }); }
+
+    if (!('IntersectionObserver' in window)) { showAll(); return; }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+    els.forEach(function (el, i) {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
+      io.observe(el);
+    });
+
+    // Reveal above-the-fold content immediately (hero / first screen).
+    requestAnimationFrame(function () {
+      els.forEach(function (el) {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.95) { el.classList.add('in'); }
+      });
+    });
+
+    // Failsafe: never leave anything stuck invisible.
+    setTimeout(function () {
+      els.forEach(function (el) { if (!el.classList.contains('in')) el.classList.add('in'); });
+    }, 1200);
+  })();
+
+  /* ============================================================
+     HERO — ROTACAO ALEATORIA DE FOTOS
+     A cada carregamento da pagina, uma foto da lista FOTOS abaixo
+     e sorteada e exibida. Garante que sempre haja imagem visivel
+     (fundo da marca + fallback, sem flash de espaco vazio).
+
+     >>> COMO ADICIONAR UMA NOVA FOTO (ate 10 ou mais): <<<
+       1. Coloque o arquivo da imagem dentro da pasta  images/
+          (ideal: JPG, ~1100px de largura, leve — ate ~150KB).
+       2. Adicione UMA nova linha na lista FOTOS, no formato:
+            { src: 'images/NOME-DO-ARQUIVO.jpg', pos: '50% 45%' },
+          - src  = caminho do arquivo na pasta images/
+          - pos  = enquadramento do corte 4:5 (object-position):
+                   1o valor = horizontal (0%=esquerda, 100%=direita)
+                   2o valor = vertical   (0%=topo,     100%=base)
+                   ajuste para manter o medico visivel no recorte.
+       3. Para REMOVER uma foto, basta apagar a linha dela.
+       Nao precisa mexer em mais nada — o sorteio se ajusta sozinho.
+     ============================================================ */
+  (function () {
+    var img = document.getElementById('hero-foto');
+    if (!img) return;
+    var FOTOS = [
+      { src: 'images/medico-consultorio.jpg',  pos: '40% 45%' },
+      { src: 'images/medica-ambulatorio.jpg',  pos: '50% 38%' },
+      { src: 'images/medico-radiologia.jpg',   pos: '72% 50%' },
+      { src: 'images/medico-pediatria.jpg',    pos: '62% 42%' },
+      { src: 'images/medica-hospital.jpg',     pos: '60% 40%' }
+      // Suporta até 10+ fotos: basta adicionar novas linhas aqui
+      // e subir os arquivos correspondentes para a pasta images/.
+    ];
+    function aplicar(i) {
+      var f = FOTOS[i];
+      img.style.objectPosition = f.pos;
+      img.src = f.src;
+    }
+    // fallback: se alguma imagem falhar, tenta a próxima da lista
+    var tentadas = 0;
+    img.addEventListener('error', function () {
+      tentadas++;
+      if (tentadas < FOTOS.length) aplicar(tentadas % FOTOS.length);
+    });
+    aplicar(Math.floor(Math.random() * FOTOS.length));
+  })();
+
+  (function () {
+    var form = document.getElementById('leadForm');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var d = new FormData(form);
+      var msg =
+        'Olá! Quero agendar meu diagnóstico gratuito (Um Caminho de Saída).\n\n' +
+        'Nome: ' + (d.get('nome') || '') + '\n' +
+        'E-mail: ' + (d.get('email') || '') + '\n' +
+        'Telefone: ' + (d.get('telefone') || '') + '\n' +
+        'Cidade: ' + (d.get('cidade') || '') + '\n' +
+        'Área de atuação: ' + (d.get('area') || '');
+      window.open('https://wa.me/5531999572799?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    });
+  })();
+</script>
+
+<style id="__om-edit-overrides"></style>
+</body>
+</html>
