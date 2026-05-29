@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Um Caminho de Saída — Organização de renda e patrimônio para médicos</title>
+<style>
+/* ============================================================
+   Um Caminho de Saída — sistema visual
+   Tom: sério, institucional, autoridade médica/financeira
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  /* — Cor — */
+  --bg:        oklch(0.975 0.006 85);   /* off-white quente */
+  --bg-soft:   oklch(0.955 0.008 85);   /* cartões / faixas */
+  --paper:     oklch(0.99 0.004 85);
+  --ink:       oklch(0.255 0.035 255);  /* azul-tinta profundo */
+  --ink-deep:  oklch(0.205 0.035 255);  /* fundos escuros */
+  --ink-2:     oklch(0.42 0.03 255);    /* texto secundário */
+  --line:      oklch(0.255 0.035 255 / 0.14);
+  --line-soft: oklch(0.255 0.035 255 / 0.08);
+  --gold:      oklch(0.66 0.09 72);     /* acento dourado/bronze */
+  --gold-deep: oklch(0.56 0.09 70);
+  --on-dark:   oklch(0.95 0.006 85);
+  --on-dark-2: oklch(0.78 0.012 85);
+  --on-dark-line: oklch(0.95 0.006 85 / 0.14);
+
+  /* — Tipografia — */
+  --serif: 'Spectral', Georgia, 'Times New Roman', serif;
+  --sans:  'Public Sans', system-ui, -apple-system, sans-serif;
+
+  /* — Métrica — */
+  --maxw: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Tipografia ---------- */
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; letter-spacing: -0.01em; }
+.display {
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.h2 { font-size: clamp(2rem, 3.6vw, 3.1rem); font-weight: 300; }
+.h3 { font-size: clamp(1.35rem, 2vw, 1.7rem); font-weight: 500; }
+em, .it { font-style: italic; }
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.eyebrow.on-dark { color: var(--gold); }
+
+.lead { font-size: clamp(1.05rem, 1.5vw, 1.28rem); color: var(--ink-2); line-height: 1.55; max-width: 40ch; }
+.muted { color: var(--ink-2); }
+.serif-num { font-family: var(--serif); font-weight: 300; }
+
+/* ---------- Layout ---------- */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
+section { padding-block: clamp(64px, 9vw, 132px); }
+
+.rule { height: 1px; background: var(--line); border: 0; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6em;
+  font-family: var(--sans); font-size: 0.92rem; font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.92em 1.5em;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer; text-decoration: none;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.btn-primary { background: var(--ink); color: var(--on-dark); }
+.btn-primary:hover { background: var(--ink-deep); transform: translateY(-1px); }
+.btn-gold { background: var(--gold); color: oklch(0.22 0.03 70); }
+.btn-gold:hover { background: var(--gold-deep); color: var(--on-dark); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn-ghost.on-dark { color: var(--on-dark); border-color: var(--on-dark-line); }
+.btn-ghost.on-dark:hover { border-color: var(--on-dark); }
+
+.arrow { transition: transform .2s ease; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* ---------- Placeholder de imagem ---------- */
+.ph {
+  position: relative;
+  background-color: var(--bg-soft);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 11px,
+    oklch(0.255 0.035 255 / 0.05) 11px 12px
+  );
+  border: 1px solid var(--line-soft);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.ph::after {
+  content: attr(data-label);
+  font-family: 'Public Sans', monospace;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-2); opacity: 0.7;
+  padding: 0.4em 0.7em;
+  border: 1px dashed var(--line);
+  background: var(--paper);
+}
+.ph.on-dark {
+  background-color: oklch(0.255 0.035 255 / 0.4);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 11px, oklch(0.95 0.006 85 / 0.05) 11px 12px);
+  border-color: var(--on-dark-line);
+}
+.ph.on-dark::after { color: var(--on-dark-2); background: transparent; border-color: var(--on-dark-line); }
+
+/* ---------- Nav ---------- */
+.site-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: oklch(0.975 0.006 85 / 0.82);
+  backdrop-filter: saturate(1.2) blur(12px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.nav-inner { display: flex; align-items: center; gap: 2rem; height: 76px; }
+.brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; color: var(--ink); }
+.brand-mark {
+  width: 26px; height: 26px; flex: none;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  position: relative;
+}
+.brand-mark::after {
+  content: ""; position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  clip-path: polygon(50% 50%, 100% 0, 100% 100%, 50% 100%);
+}
+.brand-name { font-family: var(--serif); font-size: 1.02rem; line-height: 1.0; font-weight: 500; letter-spacing: 0.01em; }
+.brand-sub { font-style: italic; font-weight: 400; }
+.nav-links { display: flex; gap: 1.8rem; margin-left: auto; }
+.nav-links a {
+  font-size: 0.92rem; font-weight: 500; color: var(--ink-2); text-decoration: none;
+  padding-bottom: 2px; border-bottom: 1px solid transparent; transition: color .15s, border-color .15s;
+}
+.nav-links a:hover { color: var(--ink); border-color: var(--gold); }
+.nav-cta { padding: 0.62em 1.15em; font-size: 0.86rem; }
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+}
+
+/* ---------- Hero ---------- */
+.hero { padding-top: clamp(48px, 7vw, 90px); padding-bottom: clamp(56px, 8vw, 110px); }
+.hero-grid {
+  display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.hero-copy > * + * { margin-top: 1.4rem; }
+.hero-copy .display { margin-top: 1.1rem; max-width: 16ch; }
+.hero-copy .lead { max-width: 46ch; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+.hero-note { font-size: 0.85rem; color: var(--ink-2); letter-spacing: 0.02em; }
+.hero-media { position: relative; }
+.hero-ph { width: 100%; aspect-ratio: 4 / 5; border-radius: var(--radius); }
+.hero-stat {
+  position: absolute; left: -10px; bottom: -22px;
+  background: var(--ink); color: var(--on-dark);
+  display: flex; align-items: center; gap: 0.9rem;
+  padding: 1rem 1.3rem; border-radius: var(--radius);
+  box-shadow: 0 18px 40px -22px oklch(0.205 0.035 255 / 0.7);
+}
+.hero-stat-num { font-size: 2.6rem; color: var(--gold); line-height: 1; }
+.hero-stat-label { font-size: 0.86rem; line-height: 1.25; color: var(--on-dark-2); }
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-media { order: -1; max-width: 420px; }
+  .hero-stat { left: auto; right: -8px; }
+}
+
+/* ---------- Sonhos ---------- */
+.sonhos-head { max-width: 760px; }
+.sonhos-head > * + * { margin-top: 1.1rem; }
+.sonhos-head .h2 { max-width: 18ch; }
+.sonhos-lead { max-width: 60ch; }
+
+.ladder { list-style: none; margin-top: clamp(40px, 5vw, 64px); display: grid; gap: 0; }
+.rung {
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(1.2rem, 3vw, 2.4rem);
+  align-items: baseline;
+  padding: 1.8rem 0;
+  border-top: 1px solid var(--line);
+  position: relative;
+  padding-left: clamp(0px, 3vw, 56px);
+  transition: padding-left .3s ease;
+}
+.ladder .rung:last-child { border-bottom: 1px solid var(--line); }
+.rung:hover { padding-left: clamp(8px, 4vw, 80px); }
+.rung-num { font-size: clamp(1.6rem, 2.4vw, 2.2rem); color: var(--gold-deep); width: 2.4ch; }
+.rung-body { max-width: 64ch; }
+.rung-body .h3 { margin-bottom: 0.35rem; }
+.rung-peak { background: linear-gradient(90deg, oklch(0.66 0.09 72 / 0.07), transparent 60%); }
+
+/* ---------- Método (faixa escura) ---------- */
+.metodo { background: var(--ink-deep); color: var(--on-dark); }
+.metodo-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+}
+.metodo-copy > * + * { margin-top: 1.3rem; }
+.metodo-copy .h2 { color: var(--on-dark); max-width: 14ch; }
+.metodo-copy .h2 em { color: var(--gold); }
+.metodo-lead { color: var(--on-dark-2); max-width: 50ch; }
+.metodo-pillars { display: grid; gap: 1px; background: var(--on-dark-line); border: 1px solid var(--on-dark-line); border-radius: var(--radius); overflow: hidden; }
+.pillar { background: var(--ink-deep); padding: 1.7rem 1.8rem; }
+.pillar-k { display: block; font-size: 1.5rem; color: var(--gold); margin-bottom: 0.6rem; }
+.pillar-t { font-family: var(--sans); font-size: 1.05rem; font-weight: 600; color: var(--on-dark); margin-bottom: 0.3rem; }
+.pillar-d { font-size: 0.96rem; color: var(--on-dark-2); line-height: 1.5; }
+@media (max-width: 860px) { .metodo-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Ecossistema / Loop ---------- */
+.eco-head { max-width: 820px; }
+.eco-head > * + * { margin-top: 1.1rem; }
+.eco-head .h2 { max-width: 20ch; }
+.eco-lead { max-width: 64ch; }
+
+.loop {
+  list-style: none; margin-top: clamp(40px, 5vw, 64px);
+  display: flex; align-items: stretch; gap: 0;
+}
+.loop-node {
+  flex: 1; background: var(--paper);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.5rem 1.5rem 1.7rem;
+  display: flex; flex-direction: column;
+}
+.loop-num { font-size: 1.7rem; color: var(--gold-deep); margin-bottom: 0.7rem; }
+.loop-t { font-family: var(--sans); font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
+.loop-d { font-size: 0.94rem; color: var(--ink-2); line-height: 1.5; }
+.loop-arrow {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  width: clamp(28px, 3vw, 52px); color: var(--gold-deep); font-size: 1.3rem;
+}
+.loop-return {
+  margin-top: 1.3rem; font-size: 0.96rem; color: var(--ink-2);
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.loop-return-arrow { color: var(--gold-deep); font-size: 1.25rem; }
+@media (max-width: 860px) {
+  .loop { flex-direction: column; }
+  .loop-arrow { width: auto; height: 32px; transform: rotate(90deg); }
+}
+
+.eco-tools {
+  margin-top: clamp(56px, 7vw, 96px);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.eco-tools-copy > * + * { margin-top: 1rem; }
+.eco-list { list-style: none; margin-top: 1.2rem; display: grid; gap: 0.7rem; }
+.eco-list li {
+  position: relative; padding-left: 1.6rem; font-size: 0.98rem; color: var(--ink);
+}
+.eco-list li::before {
+  content: ""; position: absolute; left: 0; top: 0.6em;
+  width: 8px; height: 8px; background: var(--gold); border-radius: 50%;
+}
+.eco-ph { width: 100%; aspect-ratio: 4 / 3; border-radius: var(--radius); }
+@media (max-width: 860px) { .eco-tools { grid-template-columns: 1fr; } }
+
+/* ---------- Como funciona ---------- */
+.como-head { max-width: 720px; }
+.como-head > * + * { margin-top: 1rem; }
+.como-head .h2 { max-width: 18ch; }
+.steps {
+  margin-top: clamp(40px, 5vw, 64px);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(28px, 4vw, 56px);
+}
+.step { border-top: 2px solid var(--ink); padding-top: 1.4rem; }
+.step-n { display: block; font-size: 2.4rem; color: var(--gold-deep); line-height: 1; margin-bottom: 0.8rem; }
+.step .h3 { margin-bottom: 0.5rem; }
+.step .muted { font-size: 0.98rem; }
+@media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+
+/* ---------- CTA Diagnóstico ---------- */
+.cta { background: var(--ink); color: var(--on-dark); }
+.cta-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 88px);
+  align-items: center;
+}
+.cta-copy > * + * { margin-top: 1.1rem; }
+.cta-copy .h2 { color: var(--on-dark); max-width: 12ch; }
+.cta-lead { color: var(--on-dark-2); max-width: 46ch; }
+.cta-form {
+  background: var(--paper); color: var(--ink);
+  padding: clamp(1.5rem, 3vw, 2.2rem); border-radius: var(--radius);
+  display: grid; gap: 1rem;
+  box-shadow: 0 30px 60px -34px oklch(0.18 0.03 255 / 0.8);
+}
+.field { display: grid; gap: 0.35rem; }
+.field span { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-2); }
+.field input {
+  font-family: var(--sans); font-size: 1rem; color: var(--ink);
+  padding: 0.78em 0.9em; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg); transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px oklch(0.66 0.09 72 / 0.18); }
+.cta-submit { width: 100%; justify-content: center; margin-top: 0.2rem; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+.cta-fineprint { font-size: 0.8rem; color: var(--ink-2); text-align: center; }
+@media (max-width: 860px) { .cta-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--ink-deep); color: var(--on-dark); padding-block: clamp(48px, 6vw, 72px) 28px; }
+.footer-inner { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.footer-brand { display: flex; align-items: center; gap: 0.7rem; }
+.brand-name.on-dark { color: var(--on-dark); }
+.footer-brand .brand-mark { border-color: var(--on-dark); }
+.footer-tag { color: var(--on-dark-2); font-size: 0.95rem; margin-right: auto; max-width: 32ch; }
+.footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-links a { color: var(--on-dark-2); text-decoration: none; font-size: 0.92rem; transition: color .15s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-base {
+  margin-top: clamp(32px, 4vw, 48px); padding-top: 22px; border-top: 1px solid var(--on-dark-line);
+  display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  font-size: 0.8rem; color: var(--on-dark-2);
+}
+
+/* ---------- WhatsApp icon in buttons ---------- */
+.wa-ico { font-size: 1.05em; line-height: 1; }
+
+/* ---------- Pitch button (ecossistema) ---------- */
+.eco-pitch-btn { margin-top: 1.4rem; }
+.eco-pitch-btn .arrow { font-size: 0.95em; }
+
+/* ---------- Materiais / E-books ---------- */
+.materiais { background: var(--bg-soft); }
+.materiais-head { max-width: 720px; }
+.materiais-head > * + * { margin-top: 1rem; }
+.materiais-head .h2 { max-width: 18ch; }
+.materiais-lead { max-width: 56ch; }
+.ebooks {
+  margin-top: clamp(40px, 5vw, 64px);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 3vw, 40px);
+}
+.ebook {
+  display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 0;
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.ebook:hover { transform: translateY(-3px); box-shadow: 0 24px 48px -30px oklch(0.205 0.035 255 / 0.6); }
+.ebook-cover { aspect-ratio: 3 / 4; height: 100%; width: 100%; object-fit: cover; display: block; border: 0; border-right: 1px solid var(--line-soft); background: var(--ink-deep); }
+.ebook-body { padding: clamp(1.3rem, 2.2vw, 1.9rem); display: flex; flex-direction: column; }
+.ebook-kicker {
+  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-deep); margin-bottom: 0.6rem;
+}
+.ebook-body .h3 { font-size: clamp(1.15rem, 1.6vw, 1.45rem); margin-bottom: 0.5rem; }
+.ebook-desc { font-size: 0.96rem; }
+.ebook-actions { margin-top: auto; padding-top: 1.2rem; }
+@media (max-width: 860px) { .ebooks { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .ebook { grid-template-columns: 1fr; } .ebook-cover { aspect-ratio: 16 / 9; border-right: 0; border-bottom: 1px solid var(--line-soft); } }
+
+/* ---------- CTA card (WhatsApp) ---------- */
+.cta-card {
+  background: var(--paper); color: var(--ink);
+  padding: clamp(1.8rem, 3vw, 2.6rem); border-radius: var(--radius);
+  text-align: center;
+  box-shadow: 0 30px 60px -34px oklch(0.18 0.03 255 / 0.8);
+  display: flex; flex-direction: column; align-items: center; gap: 0.7rem;
+}
+.cta-card-ico {
+  font-size: 2.2rem; color: var(--gold-deep);
+  width: 64px; height: 64px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%; margin-bottom: 0.3rem;
+}
+.cta-card-t { font-family: var(--serif); font-size: 1.5rem; font-weight: 500; }
+.cta-card-d { color: var(--ink-2); font-size: 0.98rem; max-width: 30ch; }
+.cta-card .cta-submit { width: 100%; justify-content: center; margin-top: 0.4rem; }
+.cta-card-num { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); letter-spacing: 0.02em; }
+
+/* ---------- Hero / mídia ---------- */
+img.hero-ph { width: 100%; height: auto; aspect-ratio: 4 / 5; border-radius: var(--radius); object-fit: cover; object-position: center; display: block; border: 1px solid var(--line-soft); background: var(--ink-deep); }
+.eco-video { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--ink-deep); }
+.eco-video iframe { width: 100%; height: 100%; display: block; border: 0; }
+
+/* ---------- Reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+</style>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="site-nav" id="topo">
+  <div class="wrap nav-inner">
+    <a href="#topo" class="brand" aria-label="Um Caminho de Saída — início">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Um Caminho<br><span class="brand-sub">de&nbsp;Saída</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#sonhos">Os sonhos</a>
+      <a href="#metodo">O método</a>
+      <a href="#ecossistema">Ecossistema</a>
+      <a href="#materiais">E-books</a>
+      <a href="#como">Como funciona</a>
+    </nav>
+    <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20agendar%20meu%20diagn%C3%B3stico%20gratuito." target="_blank" rel="noopener" class="btn btn-primary nav-cta">Falar no WhatsApp</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow reveal">Organização de renda e patrimônio · exclusivo para médicos</p>
+      <h1 class="display reveal">Existe <em>um caminho de saída</em> entre o plantão de hoje e a vida que você quer amanhã.</h1>
+      <p class="lead reveal">Aposentar com tranquilidade. A casa, o carro, a viagem. E a certeza de que sua família segue amparada — mesmo que um dia você não esteja aqui. Nós transformamos a renda do médico em um plano que se sustenta sozinho.</p>
+      <div class="hero-actions reveal">
+        <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20agendar%20meu%20diagn%C3%B3stico%20gratuito." target="_blank" rel="noopener" class="btn btn-gold"><span class="wa-ico" aria-hidden="true">✆</span> Agendar diagnóstico no WhatsApp <span class="arrow">→</span></a>
+        <a href="#sonhos" class="btn btn-ghost">Entender o método</a>
+      </div>
+      <p class="hero-note reveal">Diagnóstico individual · sem custo · sigilo absoluto</p>
+    </div>
+    <div class="hero-media reveal">
+      <img id="hero-foto" class="hero-ph" alt="Médico recém-formado em atuação" src="images/medico-consultorio.jpg" style="object-position:40% 45%">
+      <div class="hero-stat">
+        <span class="serif-num hero-stat-num">01</span>
+        <span class="hero-stat-label">Um método.<br>Um caminho de saída.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A PERGUNTA / OS SONHOS ============ -->
+<section class="sonhos" id="sonhos">
+  <div class="wrap">
+    <div class="sonhos-head">
+      <p class="eyebrow reveal">A pergunta que ninguém faz ao médico</p>
+      <h2 class="h2 reveal">Será que esses sonhos são <em>possíveis</em> para quem cuida da vida dos outros?</h2>
+      <p class="lead reveal sonhos-lead">O médico fatura bem e, ainda assim, sente que o dinheiro não vira patrimônio. A rotina consome o tempo, a renda chega desorganizada e o futuro fica sempre para depois. Nós começamos pelo que importa pra você — do menor objetivo ao maior — e construímos o caminho até lá.</p>
+    </div>
+
+    <ol class="ladder reveal">
+      <li class="rung">
+        <span class="rung-num serif-num">01</span>
+        <div class="rung-body">
+          <h3 class="h3">Organizar a renda</h3>
+          <p class="muted">Saber para onde vai cada real, separar pró-labore de patrimônio e parar de viver no fluxo de caixa do plantão.</p>
+        </div>
+      </li>
+      <li class="rung">
+        <span class="rung-num serif-num">02</span>
+        <div class="rung-body">
+          <h3 class="h3">O carro, a viagem, a casa</h3>
+          <p class="muted">Realizar os objetivos de vida com planejamento — sem comprometer o futuro nem sacrificar o presente.</p>
+        </div>
+      </li>
+      <li class="rung">
+        <span class="rung-num serif-num">03</span>
+        <div class="rung-body">
+          <h3 class="h3">Aposentar com tranquilidade</h3>
+          <p class="muted">Construir uma renda que não dependa do bisturi nem da escala. Um dia, plantão será escolha — não necessidade.</p>
+        </div>
+      </li>
+      <li class="rung rung-peak">
+        <span class="rung-num serif-num">04</span>
+        <div class="rung-body">
+          <h3 class="h3">Proteger quem você ama</h3>
+          <p class="muted">Garantir renda para a sua família mesmo que um dia você não esteja aqui. O maior dos objetivos — e o que mais costuma ficar esquecido.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ O MÉTODO ============ -->
+<section class="metodo" id="metodo">
+  <div class="wrap metodo-grid">
+    <div class="metodo-copy">
+      <p class="eyebrow on-dark reveal">O motor do caminho</p>
+      <h2 class="h2 reveal">Um método de <em>perícia médica</em> de sucesso.</h2>
+      <p class="lead reveal metodo-lead">A perícia médica é uma fonte de renda nobre, previsível e escalável — e quase sempre subaproveitada. Nós estruturamos essa atuação como o motor do seu plano: uma receita que você controla, organiza e faz crescer com método, não com sorte.</p>
+      <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20estruturar%20minha%20at%C3%BAa%C3%A7%C3%A3o%20em%20per%C3%ADcia%20m%C3%A9dica." target="_blank" rel="noopener" class="btn btn-gold reveal"><span class="wa-ico" aria-hidden="true">✆</span> Quero estruturar minha perícia <span class="arrow">→</span></a>
+    </div>
+    <div class="metodo-pillars reveal">
+      <div class="pillar">
+        <span class="pillar-k serif-num">A</span>
+        <h3 class="pillar-t">Receita previsível</h3>
+        <p class="pillar-d">Uma atuação que não depende de escala, com demanda constante e remuneração definida.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-k serif-num">B</span>
+        <h3 class="pillar-t">Tempo respeitado</h3>
+        <p class="pillar-d">Mais renda por hora trabalhada, devolvendo as horas que o plantão tira da sua vida.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-k serif-num">C</span>
+        <h3 class="pillar-t">Crescimento com método</h3>
+        <p class="pillar-d">Processos, ferramentas e mentoria para sair do zero e ganhar consistência — passo a passo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ECOSSISTEMA / LOOP VIRTUOSO ============ -->
+<section class="eco" id="ecossistema">
+  <div class="wrap">
+    <div class="eco-head">
+      <p class="eyebrow reveal">Ferramentas, tecnologia e acompanhamento</p>
+      <h2 class="h2 reveal">Um ecossistema em <em>loop virtuoso</em> — cada etapa alimenta a próxima.</h2>
+      <p class="lead reveal eco-lead">Não é um curso solto nem uma planilha esquecida na gaveta. É um sistema integrado: a renda da perícia abastece a organização, que constrói o patrimônio, que sustenta a proteção da sua família — e devolve mais tranquilidade para você produzir. O ciclo gira, e gira maior a cada volta.</p>
+    </div>
+
+    <ol class="loop reveal">
+      <li class="loop-node">
+        <span class="loop-num serif-num">01</span>
+        <h3 class="loop-t">Renda</h3>
+        <p class="loop-d">A perícia médica estruturada gera receita previsível e crescente.</p>
+      </li>
+      <li class="loop-arrow" aria-hidden="true">→</li>
+      <li class="loop-node">
+        <span class="loop-num serif-num">02</span>
+        <h3 class="loop-t">Organização</h3>
+        <p class="loop-d">Cada real ganha destino: custo, reserva, patrimônio e objetivos.</p>
+      </li>
+      <li class="loop-arrow" aria-hidden="true">→</li>
+      <li class="loop-node">
+        <span class="loop-num serif-num">03</span>
+        <h3 class="loop-t">Patrimônio</h3>
+        <p class="loop-d">O dinheiro organizado vira ativos que trabalham por você.</p>
+      </li>
+      <li class="loop-arrow" aria-hidden="true">→</li>
+      <li class="loop-node">
+        <span class="loop-num serif-num">04</span>
+        <h3 class="loop-t">Proteção</h3>
+        <p class="loop-d">Sua família amparada e seu futuro garantido — em qualquer cenário.</p>
+      </li>
+    </ol>
+    <p class="loop-return reveal"><span class="loop-return-arrow" aria-hidden="true">↻</span> E o ciclo recomeça — agora com mais base, mais renda e menos esforço.</p>
+
+    <div class="eco-tools reveal">
+      <div class="eco-tools-copy">
+        <h3 class="h3">Tecnologia que mantém o ciclo girando</h3>
+        <p class="muted">Plataforma de acompanhamento, indicadores de evolução, materiais de perícia e mentoria contínua — tudo em um só lugar, para você não depender da memória nem da força de vontade.</p>
+        <ul class="eco-list">
+          <li>Painel de renda e patrimônio em tempo real</li>
+          <li>Trilha de capacitação em perícia médica</li>
+          <li>Acompanhamento individual e comunidade de pares</li>
+        </ul>
+        <a href="https://periciascamara.github.io/minas_summit_veridicus/" target="_blank" rel="noopener" class="btn btn-ghost eco-pitch-btn">Conhecer o ecossistema Veridicus IA <span class="arrow">↗</span></a>
+      </div>
+      <div class="eco-video">
+        <iframe src="https://www.youtube.com/embed/f3uJUJe3LQk?rel=0" title="Veridicus IA — apresentação" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MATERIAIS / E-BOOKS ============ -->
+<section class="materiais" id="materiais">
+  <div class="wrap">
+    <div class="materiais-head">
+      <p class="eyebrow reveal">Materiais para baixar</p>
+      <h2 class="h2 reveal">E-books para começar a trilhar o caminho <em>hoje</em>.</h2>
+      <p class="lead reveal materiais-lead">Dois guias completos sobre perícia médica e o ecossistema Veridicus IA. Abra, leia e salve em PDF — gratuitamente.</p>
+    </div>
+
+    <div class="ebooks">
+      <article class="ebook reveal">
+        <img class="ebook-cover" src="images/capa-veridicus.jpg" alt="Capa do e-book Veridicus IA — Perícia Médica">
+        <div class="ebook-body">
+          <p class="ebook-kicker">E-book · Veridicus IA</p>
+          <h3 class="h3">Veridicus IA para médicos recém-formados</h3>
+          <p class="muted ebook-desc">Como transformar a perícia médica em uma fonte de renda nobre e previsível logo no início da carreira.</p>
+          <div class="ebook-actions">
+            <a href="ebooks-pdf/veridicus-ia.pdf" target="_blank" rel="noopener" class="btn btn-primary">Ler e baixar <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ebook reveal">
+        <img class="ebook-cover" src="images/capa-perito.jpg" alt="Capa do e-book O Perito Nato — Medicina do Trabalho">
+        <div class="ebook-body">
+          <p class="ebook-kicker">E-book · Perícia do Trabalho</p>
+          <h3 class="h3">O médico do trabalho como perito nato</h3>
+          <p class="muted ebook-desc">O caminho mais natural para o médico do trabalho assumir a perícia e multiplicar a própria renda.</p>
+          <div class="ebook-actions">
+            <a href="ebooks-pdf/perito-medico-trabalho.pdf" target="_blank" rel="noopener" class="btn btn-primary">Ler e baixar <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="como" id="como">
+  <div class="wrap">
+    <div class="como-head">
+      <p class="eyebrow reveal">Começar é simples</p>
+      <h2 class="h2 reveal">Três passos entre a dúvida de hoje e o plano que se sustenta.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-n serif-num">1</span>
+        <h3 class="h3">Diagnóstico</h3>
+        <p class="muted">Uma conversa individual e sigilosa para entender sua renda, seus objetivos e onde está o gargalo. Sem custo e sem compromisso.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-n serif-num">2</span>
+        <h3 class="h3">Plano e estruturação</h3>
+        <p class="muted">Montamos seu caminho de saída: a perícia como motor de renda, a organização do que entra e a estratégia de patrimônio e proteção.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-n serif-num">3</span>
+        <h3 class="h3">Acompanhamento</h3>
+        <p class="muted">Você entra no loop virtuoso com ferramentas e mentoria contínua, ajustando a rota enquanto o ciclo gira a seu favor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA DIAGNÓSTICO ============ -->
+<section class="cta" id="diagnostico">
+  <div class="wrap cta-grid">
+    <div class="cta-copy">
+      <p class="eyebrow on-dark reveal">Seu caminho de saída começa aqui</p>
+      <h2 class="h2 reveal">Agende seu diagnóstico gratuito.</h2>
+      <p class="lead reveal cta-lead">Em uma conversa, você enxerga onde sua renda está vazando e como transformá-la em um plano que cuida do seu futuro — e do da sua família.</p>
+    </div>
+    <form class="cta-form reveal" id="leadForm" aria-label="Agendar diagnóstico">
+      <div class="field-row">
+        <label class="field">
+          <span>Nome completo</span>
+          <input type="text" name="nome" placeholder="Dr(a). seu nome" required>
+        </label>
+        <label class="field">
+          <span>E-mail</span>
+          <input type="email" name="email" placeholder="voce@email.com" required>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span>Telefone</span>
+          <input type="tel" name="telefone" placeholder="(00) 00000-0000" required>
+        </label>
+        <label class="field">
+          <span>Cidade</span>
+          <input type="text" name="cidade" placeholder="Cidade / UF" required>
+        </label>
+      </div>
+      <label class="field">
+        <span>Atuação — área da medicina</span>
+        <input type="text" name="area" placeholder="Ex.: medicina do trabalho, ortopedia, perícia…" required>
+      </label>
+      <button type="submit" class="btn btn-gold cta-submit"><span class="wa-ico" aria-hidden="true">✆</span> Enviar e falar no WhatsApp <span class="arrow">→</span></button>
+      <p class="cta-fineprint">Atendimento individual · sigilo absoluto · resposta em até 24h úteis.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name on-dark">Um Caminho<br><span class="brand-sub">de&nbsp;Saída</span></span>
+    </div>
+    <p class="footer-tag">Organização de renda e patrimônio para médicos.</p>
+    <nav class="footer-links" aria-label="Rodapé">
+      <a href="#sonhos">Os sonhos</a>
+      <a href="#metodo">O método</a>
+      <a href="#ecossistema">Ecossistema</a>
+      <a href="#materiais">E-books</a>
+      <a href="https://wa.me/5531999572799?text=Ol%C3%A1!%20Quero%20agendar%20meu%20diagn%C3%B3stico%20gratuito." target="_blank" rel="noopener">WhatsApp</a>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© 2026 Um Caminho de Saída.</span>
+    <span>Este material tem caráter informativo e não constitui recomendação individual de investimento.</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+    function showAll() { els.forEach(function (el) { el.classList.add('in'); }); }
+
+    if (!('IntersectionObserver' in window)) { showAll(); return; }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+    els.forEach(function (el, i) {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
+      io.observe(el);
+    });
+
+    // Reveal above-the-fold content immediately (hero / first screen).
+    requestAnimationFrame(function () {
+      els.forEach(function (el) {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.95) { el.classList.add('in'); }
+      });
+    });
+
+    // Failsafe: never leave anything stuck invisible.
+    setTimeout(function () {
+      els.forEach(function (el) { if (!el.classList.contains('in')) el.classList.add('in'); });
+    }, 1200);
+  })();
+
+  // Hero — sorteia 1 das fotos a cada carregamento, garantindo que sempre
+  // haja uma imagem visível (sem flash de espaço vazio).
+  // Para trocar/adicionar fotos: edite a lista FOTOS abaixo e suba os
+  // arquivos correspondentes para a pasta images/.
+  (function () {
+    var img = document.getElementById('hero-foto');
+    if (!img) return;
+    var FOTOS = [
+      { src: 'images/medico-consultorio.jpg',  pos: '40% 45%' },
+      { src: 'images/medica-ambulatorio.jpg',  pos: '50% 38%' },
+      { src: 'images/medico-radiologia.jpg',   pos: '72% 50%' },
+      { src: 'images/medico-pediatria.jpg',    pos: '62% 42%' },
+      { src: 'images/medica-hospital.jpg',     pos: '60% 40%' }
+      // Suporta até 10+ fotos: basta adicionar novas linhas aqui
+      // e subir os arquivos correspondentes para a pasta images/.
+    ];
+    function aplicar(i) {
+      var f = FOTOS[i];
+      img.style.objectPosition = f.pos;
+      img.src = f.src;
+    }
+    // fallback: se alguma imagem falhar, tenta a próxima da lista
+    var tentadas = 0;
+    img.addEventListener('error', function () {
+      tentadas++;
+      if (tentadas < FOTOS.length) aplicar(tentadas % FOTOS.length);
+    });
+    aplicar(Math.floor(Math.random() * FOTOS.length));
+  })();
+
+  (function () {
+    var form = document.getElementById('leadForm');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var d = new FormData(form);
+      var msg =
+        'Olá! Quero agendar meu diagnóstico gratuito (Um Caminho de Saída).\n\n' +
+        'Nome: ' + (d.get('nome') || '') + '\n' +
+        'E-mail: ' + (d.get('email') || '') + '\n' +
+        'Telefone: ' + (d.get('telefone') || '') + '\n' +
+        'Cidade: ' + (d.get('cidade') || '') + '\n' +
+        'Área de atuação: ' + (d.get('area') || '');
+      window.open('https://wa.me/5531999572799?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    });
+  })();
+</script>
+
+<style id="__om-edit-overrides"></style>
+</body>
+</html>
